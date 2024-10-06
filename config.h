@@ -1,2 +1,25 @@
 #pragma once
 #define DEFAULT_DELIMITER "\n"
+#define INPUT_LENGTH 256
+#define ALLOWED_CHARS "abcdefghijkjlmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ`1234567890-=~!@#$%^&*()_+[]{};':\",./<>?\\ "
+
+#define MENU_CURSOR_COLOR { TB_BLACK, TB_WHITE }
+#define MENU_NORMAL_COLOR { TB_WHITE, TB_BLACK }
+
+#define INPUT_CURSOR_COLOR { TB_BLACK, TB_WHITE }
+#define INPUT_NORMAL_COLOR { TB_WHITE, TB_BLACK }
+
+#define BORDER_FOREGROUND TB_WHITE
+#define BORDER_BACKGROUND TB_BLACK
+
+#define BORDER_VERTICAL "│"
+#define BORDER_HORIZONTAL "─"
+
+#define BORDER_TOP_LEFT "┌"
+#define BORDER_TOP_RIGHT "┐"
+
+#define BORDER_MIDDLE_LEFT "├"
+#define BORDER_MIDDLE_RIGHT "┤"
+
+#define BORDER_BOTTOM_LEFT "└"
+#define BORDER_BOTTOM_RIGHT "┘"
