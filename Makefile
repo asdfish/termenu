@@ -10,7 +10,7 @@ TERMENU_SOURCE_FILES := termenu.c
 TERMENU_HEADER_FILES :=
 TERMENU_LINK_FLAGS :=
 TERMENU_INCLUDE_FLAGS :=
-TERMENU_OBJECT_FILES := build/termenu.c.o
+TERMENU_OBJECT_FILES := build/string_utils.c.o build/termenu.c.o
 
 TERMENU_PATH_SOURCE_FILES := termenu_path.c
 TERMENU_PATH_OBJECT_FILES := build/string_utils.c.o build/termenu_path.c.o
