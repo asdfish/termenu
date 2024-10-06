@@ -14,4 +14,4 @@ $TERM -e termenu
 ~~~
 
 ## Showcase
-!(gif of the application working)[./showcase.gif]
+![gif of the application working](./showcase.gif)
