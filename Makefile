@@ -18,6 +18,8 @@ TERMENU_PATH_OBJECT_FILES := build/string_utils.c.o build/termenu_path.c.o
 DEBUG_FLAGS := -Wall -Wextra -Wpedantic
 OPTIMIZATION_FLAGS := -Og
 
+INSTALL_DIRECTORY := /usr/local/bin
+
 # ${1} source file
 # ${2} extra flags
 define COMPILE_FILE
@@ -55,6 +57,23 @@ endif
 dependencies_prep:
 ifeq (, $(wildcard deps))
 	mkdir deps
+endif
+
+install: all ${INSTALL_DIRECTORY}
+	chmod +x termenu_run
+	cp -f termenu ${INSTALL_DIRECTORY}
+	cp -f termenu_path ${INSTALL_DIRECTORY}
+	cp -f termenu_run ${INSTALL_DIRECTORY}
+
+uninstall:
+ifneq (, $(wildcard ${INSTALL_DIRECTORY}/termenu))
+	rm -f ${INSTALL_DIRECTORY}/termenu
+endif
+ifneq (, $(wildcard ${INSTALL_DIRECTORY}/termenu_path))
+	rm -f ${INSTALL_DIRECTORY}/termenu_path
+endif
+ifneq (, $(wildcard ${INSTALL_DIRECTORY}/termenu_run))
+	rm -f ${INSTALL_DIRECTORY}/termenu_run
 endif
 
 termbox2: dependencies_prep
