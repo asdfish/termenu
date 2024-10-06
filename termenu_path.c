@@ -3,9 +3,15 @@
 #include <dirent.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
-int main(void) {
-  const char* path = getenv("PATH");
+int main(int argc, const char* argv[], const char* envv[]) {
+  const char* path = NULL;
+
+  for(unsigned int i = 0; envv[i] != NULL ; i++)
+    if(strncmp(envv[i], "PATH=", 5) == 0)
+      path = envv[i] + 5;
+
   if(path == NULL)
     return -1;
 
@@ -18,9 +24,9 @@ int main(void) {
     if(directory_pointer == NULL)
       continue;
 
-    struct dirent* dirent_pointer;
+    struct dirent* dirent_pointer = NULL;
     while((dirent_pointer = readdir(directory_pointer)) != NULL)
-      if(dirent_pointer->d_type == DT_REG)
+      if(dirent_pointer->d_type == DT_REG || dirent_pointer->d_type == DT_LNK)
         fprintf(stdout, "%s\n", dirent_pointer->d_name);
 
     closedir(directory_pointer);
