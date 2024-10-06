@@ -65,11 +65,13 @@ char** string_separate(const char* string, const char* delimiter, unsigned int* 
     return NULL;
   }
 
-  char* buffer;
-  unsigned int i = 0;
-  while((buffer = strsep(&string_copy, delimiter)) != NULL) {
-    array[i] = buffer;
-    i ++;
+  if(count != 0) {
+    char* buffer;
+    unsigned int i = 0;
+    while((buffer = strsep(&string_copy, delimiter)) != NULL) {
+      array[i] = buffer;
+      i ++;
+    }
   }
   array[count] = NULL;
 
