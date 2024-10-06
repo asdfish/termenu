@@ -2,6 +2,10 @@ CC ?= gcc
 
 C_STANDARD := -std=gnu11
 
+UTILS_SOURCE_FILES := utils/string_utils.c utils/termbox_utils.c
+UTILS_HEADER_FILES := utils/string_utils.h utils/termbox_utils.h
+UTILS_INCLUDE_FLAGS := -Ideps/termbox2
+
 TERMENU_SOURCE_FILES :=
 TERMENU_HEADER_FILES :=
 TERMENU_LINK_FLAGS :=
@@ -21,7 +25,13 @@ define COMPILE_FILE
 
 endef
 
-all: termbox2 termenu termenu_path
+all: termbox2 utils termenu termenu_path
+
+utils: build_prep ${UTILS_SOURCE_FILES}
+	$(foreach SOURCE_FILE,$\
+		${UTILS_SOURCE_FILES},$\
+		$(call COMPILE_FILE,${SOURCE_FILE},${UTILS_INCLUDE_FLAGS})$\
+	)
 
 termenu: build_prep ${TERMENU_SOURCE_FILES} ${TERMENU_HEADER_FILES}
 	$(foreach SOURCE_FILE,$\
