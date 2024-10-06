@@ -3,5 +3,5 @@
 PROGRAM="$(termenu "$(termenu_path)")"
 
 if ! [ -z "${PROGRAM}" ]; then
-  "${PROGRAM}" &
+  "${PROGRAM}"
 fi
