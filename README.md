@@ -10,7 +10,7 @@ sudo make install
 
 ## Usage
 ~~~bash
-$TERM -e termenu
+$TERM -e termenu_run
 ~~~
 
 ## Showcase
