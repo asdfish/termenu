@@ -12,3 +12,6 @@ sudo make install
 ~~~bash
 $TERM -e termenu
 ~~~
+
+## Showcase
+!(gif of the application working)[./showcase.gif]
