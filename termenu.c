@@ -1,5 +1,7 @@
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "config.h"
 #include "utils/string_utils.h"
@@ -68,7 +70,29 @@ int main(int argc, const char* argv[]) {
 
   draw_border();
 
+  const char* allowed_chars = ALLOWED_CHARS;
+
+  bool using_items = true;
+
+  const char* selected_item;
+
   while(1) {
+    if(!using_items)
+      free(menu.items);
+
+    if(strlen(input.contents) != 0) {
+      menu.items = string_find_in_array(items, input.contents, &menu.items_length);
+
+      if(menu.items == NULL)
+        goto exit_loop;
+
+      menu.cursor = 0;
+      using_items = false;
+    } else {
+      menu.items = items;
+      using_items = true;
+    }
+
     input_draw(&input);
     menu_draw(&menu);
     tb_present();
@@ -88,9 +112,17 @@ int main(int argc, const char* argv[]) {
     }
 
     switch(event.key) {
+      case TB_KEY_BACKSPACE:
+      case TB_KEY_BACKSPACE2:
+        input_del_char(&input);
+        break;
       case TB_KEY_ESC:
+        goto exit_loop;
+        break;
       case TB_KEY_ENTER:
-        goto tb_shutdown;
+        selected_item = menu.items[menu.cursor];
+        tb_shutdown();
+        goto menu_submit;
         break;
       case TB_KEY_ARROW_UP:
         menu_move_cursor(&menu, -1);
@@ -99,7 +131,23 @@ int main(int argc, const char* argv[]) {
         menu_move_cursor(&menu, 1);
         break;
     }
+
+    if(event.ch < UCHAR_MAX) {
+      char input_char[1];
+      input_char[0] = event.ch;
+
+      if(strstr(allowed_chars, input_char) != NULL)
+        input_add_char(&input, event.ch);
+    }
   }
+
+menu_submit:
+  fprintf(stdout, "%s", selected_item);
+  fflush(stdout);
+
+exit_loop:
+  if(!using_items)
+    free(menu.items);
 
 tb_shutdown:
   tb_shutdown();
