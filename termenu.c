@@ -73,25 +73,29 @@ int main(int argc, const char* argv[]) {
   const char* allowed_chars = ALLOWED_CHARS;
 
   bool using_items = true;
-
   const char* selected_item = NULL;
 
+  bool change_items = false;
+
   while(1) {
-    if(!using_items)
-      free(menu.items);
+    if(change_items) {
+      if(!using_items)
+        free(menu.items);
 
-    if(strlen(input.contents) != 0) {
-      menu.items = string_find_in_array(items, input.contents, &menu.items_length);
+      if(strlen(input.contents) != 0) {
+        menu.items = string_find_in_array(items, input.contents, &menu.items_length);
 
-      if(menu.items == NULL)
-        goto exit_loop;
+        if(menu.items == NULL)
+          goto exit_loop;
 
-      menu.cursor = 0;
-      using_items = false;
-    } else {
-      menu.items = items;
-      using_items = true;
+        menu.cursor = 0;
+        using_items = false;
+      } else {
+        menu.items = items;
+        using_items = true;
+      }
     }
+    change_items = false;
 
     input_draw(&input);
     menu_draw(&menu);
@@ -115,10 +119,12 @@ int main(int argc, const char* argv[]) {
       case TB_KEY_BACKSPACE:
       case TB_KEY_BACKSPACE2:
         input_del_char(&input);
-        break;
+        change_items = true;
+        continue;
+
       case TB_KEY_ESC:
         goto exit_loop;
-        break;
+
       case TB_KEY_ENTER:
         if(menu.cursor < menu.items_length)
           selected_item = menu.items[menu.cursor];
@@ -127,21 +133,25 @@ int main(int argc, const char* argv[]) {
 
         tb_shutdown();
         goto menu_submit;
-        break;
+
       case TB_KEY_ARROW_UP:
         menu_move_cursor(&menu, -1);
-        break;
+        change_items = false;
+        continue;
       case TB_KEY_ARROW_DOWN:
         menu_move_cursor(&menu, 1);
-        break;
+        change_items = false;
+        continue;
     }
 
     if(event.ch < UCHAR_MAX) {
       char input_char[1];
       input_char[0] = event.ch;
 
-      if(strstr(allowed_chars, input_char) != NULL)
+      if(strstr(allowed_chars, input_char) != NULL) {
         input_add_char(&input, event.ch);
+        change_items = true;
+      }
     }
   }
 
