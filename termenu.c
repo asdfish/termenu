@@ -74,7 +74,7 @@ int main(int argc, const char* argv[]) {
 
   bool using_items = true;
 
-  const char* selected_item;
+  const char* selected_item = NULL;
 
   while(1) {
     if(!using_items)
@@ -120,7 +120,11 @@ int main(int argc, const char* argv[]) {
         goto exit_loop;
         break;
       case TB_KEY_ENTER:
-        selected_item = menu.items[menu.cursor];
+        if(menu.cursor < menu.items_length)
+          selected_item = menu.items[menu.cursor];
+        else
+          selected_item = input.contents;
+
         tb_shutdown();
         goto menu_submit;
         break;
@@ -142,12 +146,15 @@ int main(int argc, const char* argv[]) {
   }
 
 menu_submit:
-  fprintf(stdout, "%s", selected_item);
-  fflush(stdout);
+  if(selected_item != NULL) {
+    fprintf(stdout, "%s", selected_item);
+    fflush(stdout);
+  }
 
 exit_loop:
   if(!using_items)
     free(menu.items);
+  input_free(&input);
 
 tb_shutdown:
   tb_shutdown();
