@@ -13,7 +13,7 @@ TERMENU_INCLUDE_FLAGS :=
 TERMENU_OBJECT_FILES :=
 
 TERMENU_PATH_SOURCE_FILES := termenu_path.c
-TERMENU_PATH_OBJECT_FILES := build/termenu_path.c.o
+TERMENU_PATH_OBJECT_FILES := build/string_utils.c.o build/termenu_path.c.o
 
 DEBUG_FLAGS := -Wall -Wextra -Wpedantic
 OPTIMIZATION_FLAGS := -Og

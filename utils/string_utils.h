@@ -19,7 +19,7 @@ char** string_find_in_array(char** array, const char* query, unsigned int* lengt
 // returns string separated by delimiter as NULL terminated array
 // must be free() ed
 // returns NULL on failure
-const char** string_separate(const char* string, const char* delimiter);
+char** string_separate(const char* string, const char* delimiter);
 
 // returns a heap string that that replaces all occurences of query with replacement in string
 // must be free() ed

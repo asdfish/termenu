@@ -49,14 +49,14 @@ char** string_find_in_array(char** array, const char* query, unsigned int* lengt
   return output;
 }
 
-const char** string_separate(const char* string, const char* delimiter) {
+char** string_separate(const char* string, const char* delimiter) {
   char* string_copy = strdup(string);
   if(string_copy == NULL)
     return NULL;
 
   unsigned int count = string_count(string_copy, delimiter);
 
-  const char** array = (const char**)malloc((count + 1) * sizeof(const char*));
+  char** array = (char**)malloc((count + 1) * sizeof(char*));
   if(array == NULL) {
     free(string_copy);
     return NULL;
