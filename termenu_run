@@ -2,4 +2,6 @@
 
 PROGRAM="$(./termenu "$(./termenu_path)")"
 
-exec "${PROGRAM}"
+if ! [ -z "${PROGRAM}" ]; then
+  "${PROGRAM}" &
+fi
