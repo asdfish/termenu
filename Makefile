@@ -8,8 +8,8 @@ TERMENU_LINK_FLAGS :=
 TERMENU_INCLUDE_FLAGS :=
 TERMENU_OBJECT_FILES :=
 
-TERMENU_PATH_SOURCE_FILES :=
-TERMENU_PATH_OBJECT_FILES :=
+TERMENU_PATH_SOURCE_FILES := termenu_path.c
+TERMENU_PATH_OBJECT_FILES := build/termenu_path.c.o
 
 DEBUG_FLAGS := -Wall -Wextra -Wpedantic
 OPTIMIZATION_FLAGS := -Og
@@ -34,6 +34,7 @@ termenu_path: build_prep ${TERMENU_PATH_SOURCE_FILES}
 		${TERMENU_PATH_SOURCE_FILES},$\
 		$(call COMPILE_FILE,${SOURCE_FILE},)$\
 	)
+	${CC} ${TERMENU_PATH_OBJECT_FILES} -o termenu_path
 
 build_prep:
 ifeq (, $(wildcard build))
