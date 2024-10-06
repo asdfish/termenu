@@ -7,10 +7,10 @@ UTILS_HEADER_FILES := utils/string_utils.h utils/termbox_utils.h
 UTILS_INCLUDE_FLAGS := -Ideps/termbox2
 
 TERMENU_SOURCE_FILES := termenu.c
-TERMENU_HEADER_FILES :=
-TERMENU_LINK_FLAGS :=
-TERMENU_INCLUDE_FLAGS :=
-TERMENU_OBJECT_FILES := build/string_utils.c.o build/termenu.c.o
+TERMENU_HEADER_FILES := config.h
+TERMENU_LINK_FLAGS := -Ldeps/termbox2 -ltermbox
+TERMENU_INCLUDE_FLAGS := -Ideps/termbox2
+TERMENU_OBJECT_FILES := build/string_utils.c.o build/termbox_utils.c.o build/termenu.c.o
 
 TERMENU_PATH_SOURCE_FILES := termenu_path.c
 TERMENU_PATH_OBJECT_FILES := build/string_utils.c.o build/termenu_path.c.o
@@ -36,9 +36,9 @@ utils: build_prep ${UTILS_SOURCE_FILES}
 termenu: build_prep ${TERMENU_SOURCE_FILES} ${TERMENU_HEADER_FILES}
 	$(foreach SOURCE_FILE,$\
 		${TERMENU_SOURCE_FILES},$\
-		$(call COMPILE_FILE,${SOURCE_FILE},${TERMENU_LINK_FLAGS},${TERMENU_INCLUDE_FLAGS})$\
+		$(call COMPILE_FILE,${SOURCE_FILE},${TERMENU_INCLUDE_FLAGS} ${TERMENU_LINK_FLAGS},${TERMENU_INCLUDE_FLAGS})$\
 	)
-	${CC} ${TERMENU_OBJECT_FILES} -o termenu
+	${CC} ${TERMENU_OBJECT_FILES} ${TERMENU_LINK_FLAGS} -o termenu
 
 termenu_path: build_prep ${TERMENU_PATH_SOURCE_FILES}
 	$(foreach SOURCE_FILE,$\
