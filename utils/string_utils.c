@@ -33,7 +33,8 @@ char** string_find_in_array(char** array, const char* query, unsigned int* lengt
     if(string_contains(array[i], query))
       query_occurences ++;
 
-  *length = query_occurences;
+  if(length != NULL)
+    *length = query_occurences;
 
   char** output = (char**) malloc((query_occurences + 1) * sizeof(const char*));
   if(output == NULL)
@@ -49,12 +50,14 @@ char** string_find_in_array(char** array, const char* query, unsigned int* lengt
   return output;
 }
 
-char** string_separate(const char* string, const char* delimiter) {
+char** string_separate(const char* string, const char* delimiter, unsigned int* length) {
   char* string_copy = strdup(string);
   if(string_copy == NULL)
     return NULL;
 
   unsigned int count = string_count(string_copy, delimiter);
+  if(length != NULL)
+    *length = count;
 
   char** array = (char**)malloc((count + 1) * sizeof(char*));
   if(array == NULL) {

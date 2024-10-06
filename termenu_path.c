@@ -9,7 +9,7 @@ int main(void) {
   if(path == NULL)
     return -1;
 
-  char** path_separated = string_separate(path, ":");
+  char** path_separated = string_separate(path, ":", NULL);
   if(path_separated == NULL)
     return -1;
 
