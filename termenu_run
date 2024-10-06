@@ -1,0 +1,5 @@
+#!/bin/sh
+
+PROGRAM="$(./termenu "$(./termenu_path)")"
+
+exec "${PROGRAM}"
