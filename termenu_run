@@ -1,6 +1,6 @@
 #!/bin/sh
 
-PROGRAM="$(./termenu "$(./termenu_path)")"
+PROGRAM="$(termenu "$(termenu_path)")"
 
 if ! [ -z "${PROGRAM}" ]; then
   "${PROGRAM}" &
