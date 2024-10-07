@@ -5,12 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 
-int main(int argc, const char* argv[], const char* envv[]) {
-  const char* path = NULL;
-
-  for(unsigned int i = 0; envv[i] != NULL ; i++)
-    if(strncmp(envv[i], "PATH=", 5) == 0)
-      path = envv[i] + 5;
+int main(void) {
+  const char* path = getenv("PATH");
 
   if(path == NULL)
     return -1;
