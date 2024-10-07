@@ -29,6 +29,9 @@ int main(int argc, const char* argv[]) {
       break;
   }
 
+  if(delimiter == NULL)
+    return -1;
+
   unsigned int items_length = 0;
 
   const char* items_raw = argv[1];
@@ -92,6 +95,7 @@ int main(int argc, const char* argv[]) {
         using_items = false;
       } else {
         menu.items = items;
+        menu.items_length = items_length;
         using_items = true;
       }
     }
