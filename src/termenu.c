@@ -146,16 +146,21 @@ int main(int argc, const char* argv[]) {
         menu_move_cursor(&menu, 1);
         change_items = false;
         continue;
+      default:
+        break;
     }
 
     if(event.ch < UCHAR_MAX) {
-      char input_char[1];
+      char input_char[2];
       input_char[0] = event.ch;
+      input_char[1] = '\0';
 
       if(strstr(allowed_chars, input_char) != NULL) {
         input_add_char(&input, event.ch);
         change_items = true;
       }
+
+      change_items = true;
     }
   }
 
