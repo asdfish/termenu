@@ -83,9 +83,9 @@ void menu_move_cursor(Menu* menu, int step) {
 
 void input_add_char(Input* input, char new_char) {
   unsigned int contents_length = strlen(input->contents);
-  if(contents_length + 1 < input->contents_size) {
+  if(contents_length + 2 < input->contents_size) {
     input->contents[contents_length] = new_char;
-    input->contents[contents_length + 1] = '\0';
+    input->contents[contents_length + 2] = '\0';
 
     input->cursor = strlen(input->contents);
   }
