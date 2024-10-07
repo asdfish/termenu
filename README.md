@@ -2,15 +2,19 @@
 terminal dmenu
 
 ## Building
-~~~bash
+~~~sh
 git clone https://github.com/asdfish/termenu
 cd termenu
 sudo make install
 ~~~
 
 ## Usage
-~~~bash
+~~~sh
 $TERM -e termenu_run
+~~~
+
+~~~sh
+termenu "item 1:item 2:" ":"
 ~~~
 
 ## Showcase
