@@ -1,25 +1,5 @@
 #include "termbox_utils.h"
 
-/*#ifndef NO_MENU_SELECTIONS*/
-/*int menu_change_items(Menu* menu, const char** new_items) {*/
-/*#else*/
-/*void menu_change_items(Menu* menu, const char** new_items) {*/
-/*#endif*/
-/*  for(menu->items_length = 0; new_items[menu->items_length] != NULL; menu->items_length ++);*/
-/**/
-/*  menu->items = new_items;*/
-/**/
-/*#ifndef NO_MENU_SELECTIONS*/
-/*  menu_free(menu);*/
-/**/
-/*  menu->selections = (bool*) calloc(menu->items_length, sizeof(bool));*/
-/*  if(menu->selections == NULL)*/
-/*    return -1;*/
-/**/
-/*  return 0;*/
-/*#endif*/
-/*}*/
-
 void menu_draw(Menu* menu) {
   if(menu->camera > menu->cursor)
     menu->camera = menu->cursor;
@@ -39,37 +19,18 @@ void menu_draw(Menu* menu) {
     if(item == menu->cursor)
       color = &menu->cursor_color;
 
-/*#ifndef NO_MENU_SELECTIONS*/
-/*    bool item_selected = menu->selections[item];*/
-/*#endif*/
     const char* item_name = menu->items[item];
 
     for(unsigned int j = 0; j < menu->width; j ++) {
       char next_char = ' ';
 
-/*#ifndef NO_MENU_SELECTIONS*/
-/*      if(item_selected) {*/
-/*        if(j < strlen(menu->selection_prefix))*/
-/*          next_char = menu->selection_prefix[j];*/
-/*        else if(j - strlen(menu->selection_prefix))*/
-/*          next_char = item_name[j - strlen(menu->selection_prefix)];*/
-/*      } else if(j < strlen(item_name))*/
-/*#else*/
       if(j < strlen(item_name))
-/*#endif*/
         next_char = item_name[j];
       
       tb_set_cell(menu->x + j, menu->y + i, next_char, color->foreground, color->background);
     }
   }
 }
-
-/*#ifndef NO_MENU_SELECTIONS*/
-/*void menu_free(Menu* menu) {*/
-/*  if(menu->selections != NULL)*/
-/*    free(menu->selections);*/
-/*}*/
-/*#endif*/
 
 void menu_move_cursor(Menu* menu, int step) {
   if((int) menu->cursor + step > 0)
@@ -134,10 +95,3 @@ int input_init(Input* input) {
 
   return 0;
 }
-
-/*void input_move_cursor(Input* input, int step) {*/
-/*  if((int)input->cursor + step < 0)*/
-/*    input->cursor = 0;*/
-/*  else*/
-/*    input->cursor += step;*/
-/*}*/
