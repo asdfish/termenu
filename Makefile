@@ -21,17 +21,17 @@ all: termenu termenu_path
 build:
 	mkdir build
 
-build/string_utils.c.o: utils/string_utils.h utils/string_utils.c
-	$(call COMPILE_FILE,utils/string_utils.c)
+build/string_utils.c.o: include/string_utils.h src/string_utils.c
+	$(call COMPILE_FILE,src/string_utils.c)
 
-build/termbox_utils.c.o: utils/termbox_utils.h utils/termbox_utils.c
-	$(call COMPILE_FILE,utils/termbox_utils.c)
+build/termbox_utils.c.o: include/termbox_utils.h src/termbox_utils.c
+	$(call COMPILE_FILE,src/termbox_utils.c)
 
-build/termenu.c.o: config.h utils/string_utils.h utils/termbox_utils.h termenu.c
-	$(call COMPILE_FILE,termenu.c)
+build/termenu.c.o: config.h include/string_utils.h include/termbox_utils.h src/termenu.c
+	$(call COMPILE_FILE,src/termenu.c)
 
-build/termenu_path.c.o: termenu_path.c
-	$(call COMPILE_FILE,termenu_path.c)
+build/termenu_path.c.o: src/termenu_path.c
+	$(call COMPILE_FILE,src/termenu_path.c)
 
 deps:
 	mkdir deps

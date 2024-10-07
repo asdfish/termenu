@@ -1,4 +1,4 @@
-#include "termbox_utils.h"
+#include <termbox_utils.h>
 
 void menu_draw(Menu* menu) {
   if(menu->camera > menu->cursor)
