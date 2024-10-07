@@ -1,63 +1,51 @@
 CC ?= gcc
 
-C_STANDARD := -std=gnu11
+STANDARD := -std=gnu11
 
-UTILS_SOURCE_FILES := utils/string_utils.c utils/termbox_utils.c
-UTILS_HEADER_FILES := utils/string_utils.h utils/termbox_utils.h
-UTILS_INCLUDE_FLAGS := -Ideps/termbox2
+INCLUDE_FLAGS := -Ideps/termbox2 -Iinclude
 
-TERMENU_SOURCE_FILES := termenu.c
-TERMENU_HEADER_FILES := config.h
+OPTIMIZATION_FLAGS := -O2 -march=native -pipe
+
 TERMENU_LINK_FLAGS := -Ldeps/termbox2 -ltermbox
-TERMENU_INCLUDE_FLAGS := -Ideps/termbox2
 TERMENU_OBJECT_FILES := build/string_utils.c.o build/termbox_utils.c.o build/termenu.c.o
 
-TERMENU_PATH_SOURCE_FILES := termenu_path.c
 TERMENU_PATH_OBJECT_FILES := build/string_utils.c.o build/termenu_path.c.o
 
-DEBUG_FLAGS := -Wall -Wextra -Wpedantic
-OPTIMIZATION_FLAGS := -O2 -march=native
-
-INSTALL_DIRECTORY := /usr/local/bin
-
-# ${1} source file
-# ${2} extra flags
 define COMPILE_FILE
-	${CC} -c ${C_STANDARD} ${1} ${2} ${DEBUG_FLAGS} ${OPTIMIZATION_FLAGS} -o build/$(notdir ${1}).o 
+	${CC} -c ${STANDARD} $(1) ${INCLUDE_FLAGS} ${OPTIMIZATION_FLAGS} -o build/$(notdir $(1)).o
 
 endef
 
-all: termbox2 utils termenu termenu_path
+all: termenu termenu_path
 
-utils: build_prep ${UTILS_SOURCE_FILES}
-	$(foreach SOURCE_FILE,$\
-		${UTILS_SOURCE_FILES},$\
-		$(call COMPILE_FILE,${SOURCE_FILE},${UTILS_INCLUDE_FLAGS})$\
-	)
+build:
+	mkdir build
 
-termenu: build_prep ${TERMENU_SOURCE_FILES} ${TERMENU_HEADER_FILES}
-	$(foreach SOURCE_FILE,$\
-		${TERMENU_SOURCE_FILES},$\
-		$(call COMPILE_FILE,${SOURCE_FILE},${TERMENU_INCLUDE_FLAGS} ${TERMENU_LINK_FLAGS},${TERMENU_INCLUDE_FLAGS})$\
-	)
+build/string_utils.c.o: utils/string_utils.h utils/string_utils.c
+	$(call COMPILE_FILE,utils/string_utils.c)
+
+build/termbox_utils.c.o: utils/termbox_utils.h utils/termbox_utils.c
+	$(call COMPILE_FILE,utils/termbox_utils.c)
+
+build/termenu.c.o: config.h utils/string_utils.h utils/termbox_utils.h termenu.c
+	$(call COMPILE_FILE,termenu.c)
+
+build/termenu_path.c.o: termenu_path.c
+	$(call COMPILE_FILE,termenu_path.c)
+
+deps:
+	mkdir deps
+
+deps/termbox2: deps
+	git -C deps clone https://github.com/termbox/termbox2 --depth=1 --branch=v2.0.0
+	make -C deps/termbox2 lib
+	rm deps/termbox2/*.so deps/termbox2/*.o
+
+termenu: deps/termbox2 build ${TERMENU_OBJECT_FILES}
 	${CC} ${TERMENU_OBJECT_FILES} ${TERMENU_LINK_FLAGS} -o termenu
 
-termenu_path: build_prep ${TERMENU_PATH_SOURCE_FILES}
-	$(foreach SOURCE_FILE,$\
-		${TERMENU_PATH_SOURCE_FILES},$\
-		$(call COMPILE_FILE,${SOURCE_FILE},)$\
-	)
+termenu_path: build ${TERMENU_PATH_OBJECT_FILES}
 	${CC} ${TERMENU_PATH_OBJECT_FILES} -o termenu_path
-
-build_prep:
-ifeq (, $(wildcard build))
-	mkdir build
-endif
-
-dependencies_prep:
-ifeq (, $(wildcard deps))
-	mkdir deps
-endif
 
 install: all ${INSTALL_DIRECTORY}
 	chmod +x termenu_run
