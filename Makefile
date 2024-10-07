@@ -15,7 +15,7 @@ TERMENU_OBJECT_FILES := build/string_utils.c.o build/termbox_utils.c.o build/ter
 TERMENU_PATH_SOURCE_FILES := termenu_path.c
 TERMENU_PATH_OBJECT_FILES := build/string_utils.c.o build/termenu_path.c.o
 
-DEBUG_FLAGS := -Wall -Wextra -Wpedantic
+DEBUG_FLAGS := -Wall -Wextra -Wpedantic -Wno-unused-parameter
 OPTIMIZATION_FLAGS := -O2 -march=native
 
 INSTALL_DIRECTORY := /usr/local/bin
