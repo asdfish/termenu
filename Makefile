@@ -11,6 +11,8 @@ TERMENU_OBJECT_FILES := build/string_utils.c.o build/termbox_utils.c.o build/ter
 
 TERMENU_PATH_OBJECT_FILES := build/string_utils.c.o build/termenu_path.c.o
 
+INSTALL_DIRECTORY := /usr/local/bin
+
 define COMPILE_FILE
 	${CC} -c ${STANDARD} $(1) ${INCLUDE_FLAGS} ${OPTIMIZATION_FLAGS} -o build/$(notdir $(1)).o
 
