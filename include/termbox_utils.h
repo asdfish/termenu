@@ -1,5 +1,5 @@
 #pragma once
-#include <termbox.h>
+#include <termbox2.h>
 #include <stdbool.h>
 
 /*#define NO_MENU_SELECTIONS*/
