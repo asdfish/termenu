@@ -3,7 +3,7 @@ terminal dmenu
 
 ## Building
 ~~~sh
-git clone https://github.com/asdfish/termenu
+git clone https://github.com/asdfish/termenu --recursive --depth 1
 cd termenu
 sudo make install
 ~~~
