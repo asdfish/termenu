@@ -1,4 +1,3 @@
-deps
-build
+*.o
 termenu
 termenu_path
