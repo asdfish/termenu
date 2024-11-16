@@ -1,57 +1,73 @@
-CC ?= gcc
+CC ?= cc
 C_FLAGS := -std=gnu11 $\
-					 -Wall -Wextra -Wpedantic $\
 					 -O2 -march=native -pipe $\
-					 -Ideps/termbox2 -Iinclude
+					 -Wall -Wextra -Wpedantic $\
+					 -I. -Iinclude -Ideps/termbox2
 
-TERMENU_OBJECT_FILES := build/string_utils.o build/termbox_utils.o build/termenu.o $\
-												build/termbox2.o
-TERMENU_PATH_OBJECT_FILES := build/string_utils.o build/termenu_path.o
+# uncomment/comment to enable/disable
+# PROCESS_HEADER_FILES := yes
+PROCESSED_HEADER_FILES := $(if ${PROCESS_HEADER_FILES},$\
+														$(subst .h,$\
+														$(if $(findstring clang,${CC}),$\
+															.h.pch,$\
+															.h.gch),$\
+														$(shell find include -name '*.h' -type f)))
 
-EXECUTABLES := termenu termenu_path termenu_run
+COMMON_OBJECT_FILES := $(patsubst src/%.c,$\
+											   build/%.o,$\
+												 $(shell find src/common src/deps -name '*.c' -type f))
+TERMENU_OBJECT_FILES := $(patsubst src/%.c,$\
+													build/%.o,$\
+													$(shell find src/termenu -name '*.c' -type f))
+TERMENU_PATH_OBJECT_FILES := $(patsubst src/%.c,$\
+															 build/%.o,$\
+															 $(shell find src/termenu_path -name '*.c' -type f))
 
-INSTALL_DIRECTORY := /usr/local/bin
+TERMENU_REQUIREMENTS := ${COMMON_OBJECT_FILES} ${TERMENU_OBJECT_FILES}
+TERMENU_PATH_REQUIREMENTS := ${COMMON_OBJECT_FILES} ${TERMENU_PATH_OBJECT_FILES}
 
-define REMOVE_LIST
-	$(foreach ITEM,$\
-		${1},$\
-		$(if $(wildcard ${ITEM}),$\
-			$(shell rm ${ITEM})))
+OUTPUT_EXECUTABLES := termenu termenu_path
+
+define COMPILE
+${CC} -c $(1) ${C_FLAGS} -o $(2)
 
 endef
+define LINK
+${CC} $(1) ${C_FLAGS} -o $(2)
 
-all: termenu termenu_path
+endef
+define REMOVE
+$(if $(wildcard $(1)),$\
+	$(info rm $(1))
+	$(shell rm $(1)))
+
+endef
+define REMOVE_LIST
+$(foreach ITEM,$\
+	$(1),$\
+	$(call REMOVE,${ITEM}))
+endef
+
+all: ${PROCESSED_HEADER_FILES} ${OUTPUT_EXECUTABLES} termenu_run
+
+termenu: ${TERMENU_REQUIREMENTS}
+	$(call LINK,${TERMENU_REQUIREMENTS},$@)
+
+termenu_path: ${TERMENU_PATH_REQUIREMENTS}
+	$(call LINK,${TERMENU_PATH_REQUIREMENTS},$@)
 
 build/%.o: src/%.c
-	${CC} -c $< ${C_FLAGS} -o $@
+	$(call COMPILE,$<,$@)
 
-termenu: ${TERMENU_OBJECT_FILES}
-	${CC} ${TERMENU_OBJECT_FILES} -o termenu
-	
-termenu_path: ${TERMENU_PATH_OBJECT_FILES}
-	${CC} ${TERMENU_PATH_OBJECT_FILES} -o termenu_path
+%.gch: %
+	$(call COMPILE,$<,$@)
+%.pch: %
+	$(call COMPILE,$<,$@)
 
 clean:
-	$(call REMOVE_LIST,$\
-		${TERMENU_OBJECT_FILES})
-	$(call REMOVE_LIST,$\
-		${TERMENU_PATH_OBJECT_FILES})
-ifneq (,$(wildcard termenu))
-	rm termenu
-endif
-ifneq (,$(wildcard termenu_path))
-	rm termenu_path
-endif
+	$(call REMOVE_LIST,${PROCESSED_HEADER_FILES})
+	$(call REMOVE_LIST,${TERMENU_REQUIREMENTS})
+	$(call REMOVE_LIST,${TERMENU_PATH_REQUIREMENTS})
+	$(call REMOVE_LIST,${OUTPUT_EXECUTABLES})
 
-install: all ${INSTALL_DIRECTORY}
-	$(foreach EXECUTABLE,$\
-		${EXECUTABLES},$\
-		$(shell chmod +x ${EXECUTABLE} && cp ${EXECUTABLE} ${INSTALL_DIRECTORY}))
-
-uninstall:
-	$(foreach EXECUTABLE,$\
-		${EXECUTABLES},$\
-		$(if $(wildcard ${INSTALL_DIRECTORY}/${EXECUTABLE}),$\
-			$(shell rm ${INSTALL_DIRECTORY}/${EXECUTABLE})))
-
-.PHONY: all clean install uninstall
+.PHONY: all clean

@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../config.h"
-#include <string_utils.h>
-#include <termbox_utils.h>
+#include <config.h>
+#include <common/string_utils.h>
+#include <termenu/input.h>
+#include <termenu/menu.h>
 
 #define EXAMPLE_USAGE "\"termenu \"item 1\\nitem2\" | $SHELL\"\n"
 
