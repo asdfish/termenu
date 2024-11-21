@@ -1,8 +1,8 @@
 CC ?= cc
-C_FLAGS := -std=gnu11 $\
-					 -O2 -march=native -pipe $\
-					 -Wall -Wextra -Wpedantic $\
-					 -I. -Iinclude -Ideps/termbox2
+CFLAGS ?= -O2 -march=native -pipe
+COMMONFLAGS := -std=gnu11 $\
+							 -Wall -Wextra -Wpedantic $\
+							 -I. -Iinclude -Ideps/termbox2
 
 # uncomment/comment to enable/disable
 # PROCESS_HEADER_FILES := yes
@@ -13,15 +13,14 @@ PROCESSED_HEADER_FILES := $(if ${PROCESS_HEADER_FILES},$\
 															.h.gch),$\
 														$(shell find include -name '*.h' -type f)))
 
-COMMON_OBJECT_FILES := $(patsubst src/%.c,$\
-											   build/%.o,$\
-												 $(shell find src/common src/deps -name '*.c' -type f))
-TERMENU_OBJECT_FILES := $(patsubst src/%.c,$\
-													build/%.o,$\
-													$(shell find src/termenu -name '*.c' -type f))
-TERMENU_PATH_OBJECT_FILES := $(patsubst src/%.c,$\
-															 build/%.o,$\
-															 $(shell find src/termenu_path -name '*.c' -type f))
+define GET_OBJECT_FILES
+$(patsubst src/%.c,$\
+	build/%.o,$\
+	$(shell find $(1) -name '*.c' -type f))
+endef
+COMMON_OBJECT_FILES := $(call GET_OBJECT_FILES,src/common src/deps)
+TERMENU_OBJECT_FILES := $(call GET_OBJECT_FILES,src/termenu)
+TERMENU_PATH_OBJECT_FILES := $(call GET_OBJECT_FILES,src/termenu_path)
 
 TERMENU_REQUIREMENTS := ${COMMON_OBJECT_FILES} ${TERMENU_OBJECT_FILES}
 TERMENU_PATH_REQUIREMENTS := ${COMMON_OBJECT_FILES} ${TERMENU_PATH_OBJECT_FILES}
@@ -29,11 +28,11 @@ TERMENU_PATH_REQUIREMENTS := ${COMMON_OBJECT_FILES} ${TERMENU_PATH_OBJECT_FILES}
 OUTPUT_EXECUTABLES := termenu termenu_path
 
 define COMPILE
-${CC} -c $(1) ${C_FLAGS} -o $(2)
+${CC} -c $(1) ${CFLAGS} ${COMMONFLAGS} -o $(2)
 
 endef
 define LINK
-${CC} $(1) ${C_FLAGS} -o $(2)
+${CC} $(1) ${CFLAGS} ${COMMONFLAGS} -o $(2)
 
 endef
 define REMOVE
